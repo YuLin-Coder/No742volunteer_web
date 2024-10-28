@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.volunteer.dao.UserDao">
+
+	<select id="selectUserList"  resultType="com.volunteer.entity.User" parameterType="map">
+		select * from User where 1 = 1
+
+		<if test="map.key != null and map.key != '' ">
+			<bind name="name" value="'%' + map.key + '%'"/>
+			and realname like #{name}
+		</if>
+
+		<if test="map.status != null and map.status != '' ">
+			and status = #{map.status}
+		</if>
+		<if test="map.role != null and map.role != '' ">
+			and role = #{map.role}
+		</if>
+		order by role desc , registe_time desc
+
+	</select>
+	   <insert id="addUser" parameterType="com.volunteer.entity.User" >
+	    insert into User (realname,sex, nickname,phone, tx ,role,birthday,registe_time,pwd)
+	    values (#{User.realname},#{User.sex},#{User.nickname},
+	    #{User.phone},#{User.tx},#{User.role},#{User.birthday},#{User.registe_time},#{User.pwd})
+   </insert>
+
+    <select id="selectAdmin"  resultType="com.volunteer.entity.Admin" parameterType="com.volunteer.entity.Admin">
+      select * from admin  where username = #{admin.username} and password = #{admin.password}
+   </select>
+
+	<select id="selectUser"  resultType="com.volunteer.entity.User" parameterType="com.volunteer.entity.User">
+    select * from User  where phone = #{User.phone} and pwd = #{User.pwd}  and status = '1' and role =#{User.role}
+   </select>
+	<select id="selectOrganizer"  resultType="com.volunteer.entity.Organizer" parameterType="com.volunteer.entity.Organizer">
+    select * from organizer  where phone = #{organizer.phone} and pwd = #{organizer.pwd}  and status = '1'
+   </select>
+
+	<select id="selectUserByUserName"  resultType="com.volunteer.entity.User" parameterType="com.volunteer.entity.User">
+    select * from User  where phone = #{User.phone}   and status  = '1'
+   </select>
+
+	<delete id="deleteUser" parameterType="java.lang.Integer">
+	    delete from User
+	    where id = #{id}
+	  </delete>
+
+	<select id="selectUserById" parameterType="java.lang.Integer" resultType="com.volunteer.entity.User">
+     select * from User where id = #{id}
+    </select>
+	
+        <update id="updateUser" parameterType="com.volunteer.entity.User">
+      update User set 
+        realname = #{User.realname},
+        sex = #{User.sex},
+        nickname = #{User.nickname},
+        phone = #{User.phone},
+        tx = #{User.tx},
+        pwd = #{User.pwd},
+        birthday = #{User.birthday}
+        where id = #{User.id}
+     </update>
+        <update id="updateUserInfo" parameterType="com.volunteer.entity.User">
+      update User set
+        realname = #{User.realname},
+        sex = #{User.sex},
+        nickname = #{User.nickname},
+        phone = #{User.phone},
+        pwd = #{User.pwd},
+        birthday = #{User.birthday}
+        where id = #{User.id}
+     </update>
+        <update id="updateUserTx" >
+      update User set
+        tx = #{utx}
+        where id = #{id}
+     </update>
+        <update id="updateUserState" parameterType="com.volunteer.entity.User">
+      update User set
+        status = #{User.status}
+        where id = #{User.id}
+     </update>
+        <update id="applyUser" parameterType="com.volunteer.entity.User">
+      update User set
+        status = '2',
+        role = '2'
+        where id = #{User.id}
+     </update>
+
+</mapper>

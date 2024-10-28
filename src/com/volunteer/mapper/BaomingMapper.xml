@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.volunteer.dao.BaomingDao">
+
+	<select id="selectBaomingList"  resultType="com.volunteer.entity.Baoming" parameterType="map">
+		select * from Baoming where 1 = 1
+
+		<if test="map.key != null and map.key != '' ">
+			<bind name="uname" value="'%' + map.key + '%'"/>
+			and uname like #{uname}
+		</if>
+
+		<if test="map.aid != null and map.aid != '' ">
+			and aid = #{map.aid}
+		</if>
+		<if test="map.uid != null and map.uid != '' ">
+			and uid = #{map.uid}
+		</if>
+		<if test="map.oid != null and map.oid != '' ">
+			and aid in  (select id from activity where oid = #{map.oid} )
+		</if>
+		order by id desc
+
+	</select>
+	   <insert id="addBaoming" parameterType="com.volunteer.entity.Baoming" >
+	    insert into Baoming (uid,uname, aid ,createtime)
+	    values (#{Baoming.uid},
+	    #{Baoming.uname},#{Baoming.aid},#{Baoming.createtime})
+   </insert>
+
+	<delete id="deleteBaoming" parameterType="java.lang.Integer">
+	    delete from Baoming
+	    where id = #{id}
+	  </delete>
+
+	<select id="selectBaomingByUser"  resultType="com.volunteer.entity.Baoming">
+     select * from Baoming where uid = #{id} and aid= #{aid}
+    </select>
+
+	<select id="selectBaomingListByUserId"  resultType="com.volunteer.entity.Baoming">
+     select * from Baoming where uid = #{id}
+    </select>
+
+
+	<select id="selectBaomingById"  resultType="com.volunteer.entity.Baoming">
+     select * from Baoming where id = #{id}
+    </select>
+
+	<select id="selectBaomingStatics"  resultType="com.volunteer.entity.Statics">
+        select a.title as names , count(1) as counts  from Baoming b left join activity a on a.id = b.aid  GROUP BY names
+    </select>
+
+
+	<update id="updateBaomingStatus"  parameterType="com.volunteer.entity.Baoming">
+     update Baoming  set status = #{baoming.status} where id = #{baoming.id}
+    </update>
+
+
+</mapper>

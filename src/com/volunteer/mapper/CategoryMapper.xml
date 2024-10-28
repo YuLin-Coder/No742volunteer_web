@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.volunteer.dao.CategoryDao">
+
+	<select id="selectCategoryList"  resultType="com.volunteer.entity.Category" parameterType="map">
+		select * from Category where 1 = 1
+
+		<if test="map.key != null and map.key != '' ">
+			<bind name="name" value="'%' + map.key + '%'"/>
+			and cname like #{name}
+		</if>
+
+		order by id desc
+
+	</select>
+	   <insert id="addCategory" parameterType="com.volunteer.entity.Category" >
+	    insert into Category (cname,note)
+	    values (#{Category.cname},#{Category.note})
+
+   </insert>
+
+
+	<delete id="deleteCategory" parameterType="java.lang.Integer">
+	    delete from Category
+	    where id = #{id}
+	  </delete>
+
+	<select id="selectCategoryById" parameterType="java.lang.Integer" resultType="com.volunteer.entity.Category">
+     select * from Category where id = #{id}
+    </select>
+	
+        <update id="updateCategory" parameterType="com.volunteer.entity.Category">
+
+      update Category set
+        cname = #{Category.cname},
+        note = #{Category.note}
+        where id = #{Category.id}
+     </update>
+
+
+   
+</mapper>

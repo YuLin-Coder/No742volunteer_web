@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.volunteer.dao.ActivityDao">
+
+	<select id="selectActivityList"  resultType="com.volunteer.entity.Activity" parameterType="map">
+		select * from Activity where 1 = 1
+
+		<if test="map.key != null and map.key != '' ">
+			<bind name="title" value="'%' + map.key + '%'"/>
+			and title like #{title}
+		</if>
+		<if test="map.oid != null and map.oid != '' ">
+			and oid = #{map.oid}
+		</if>
+		and status1=2
+
+		order by id desc
+
+	</select>
+	<select id="selectActivityList2"  resultType="com.volunteer.entity.Activity" parameterType="map">
+		select * from Activity where 1 = 1
+
+		<if test="map.key != null and map.key != '' ">
+			<bind name="title" value="'%' + map.key + '%'"/>
+			and title like #{title}
+		</if>
+		<if test="map.oid != null and map.oid != '' ">
+			and oid = #{map.oid}
+		</if>
+
+		order by id desc
+
+	</select>
+	   <insert id="addActivity" parameterType="com.volunteer.entity.Activity" >
+	    insert into Activity (title,cname, img ,detail,note,fbrq,start_time,end_time,total,oid,oname)
+	    values (#{Activity.title},
+	    #{Activity.cname},#{Activity.img},#{Activity.detail},#{Activity.note},#{Activity.fbrq}
+	    ,#{Activity.start_time},#{Activity.end_time},#{Activity.total},#{Activity.oid},#{Activity.oname})
+   </insert>
+
+
+	<delete id="deleteActivity" parameterType="java.lang.Integer">
+	    delete from Activity
+	    where id = #{id}
+	  </delete>
+
+	<select id="selectActivityById" parameterType="java.lang.Integer" resultType="com.volunteer.entity.Activity">
+     select * from Activity where id = #{id}
+    </select>
+	<select id="selectActivityStatics"  resultType="com.volunteer.entity.Statics">
+		 select SUBSTR(fbrq FROM 1 FOR 10) as names,count(1) as counts  from  activity GROUP BY names
+    </select>
+
+	<update id="updateActivity" parameterType="com.volunteer.entity.Activity">
+      update Activity set 
+        title = #{Activity.title},
+        cname = #{Activity.cname},
+        detail = #{Activity.detail},
+        note = #{Activity.note},
+        start_time = #{Activity.start_time},
+        end_time = #{Activity.end_time},
+        total = #{Activity.total},
+        img = #{Activity.img}
+        where id = #{Activity.id}
+     </update>
+	<update id="updateCounts" >
+      update Activity set
+        yzmcount = #{i}
+        where id = #{aid}
+     </update>
+
+	<update id="updateActivityStatus" parameterType="com.volunteer.entity.Activity">
+      update Activity set
+        status1 = #{Activity.status1}
+        where id = #{Activity.id}
+     </update>
+	<update id="stopActivity" parameterType="com.volunteer.entity.Activity">
+      update Activity set
+        status2 = #{Activity.status2}
+        where id = #{Activity.id}
+     </update>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.volunteer.dao.OrganizerDao">
+
+	<select id="selectOrganizerList"  resultType="com.volunteer.entity.Organizer" parameterType="map">
+		select * from Organizer where 1 = 1
+
+		<if test="map.key != null and map.key != '' ">
+			<bind name="name" value="'%' + map.key + '%'"/>
+			and realname like #{name}
+		</if>
+
+		<if test="map.status != null and map.status != '' ">
+			and status = #{map.status}
+		</if>
+		<if test="map.oid != null and map.oid != '' ">
+			and id = #{map.oid}
+		</if>
+
+		order by registe_time desc
+
+	</select>
+	   <insert id="addOrganizer" parameterType="com.volunteer.entity.Organizer" >
+	    insert into Organizer (realname,phone, tx ,type,registe_time,pwd)
+	    values (#{Organizer.realname},
+	    #{Organizer.phone},#{Organizer.tx},#{Organizer.type},#{Organizer.registe_time},#{Organizer.pwd})
+   </insert>
+
+	<select id="selectOrganizerByOrganizerName"  resultType="com.volunteer.entity.Organizer" parameterType="com.volunteer.entity.Organizer">
+    select * from Organizer  where phone = #{Organizer.phone}   and status  = '1'
+   </select>
+
+	<delete id="deleteOrganizer" parameterType="java.lang.Integer">
+	    delete from Organizer
+	    where id = #{id}
+	  </delete>
+
+	<select id="selectOrganizerById" parameterType="java.lang.Integer" resultType="com.volunteer.entity.Organizer">
+     select * from Organizer where id = #{id}
+    </select>
+	
+        <update id="updateOrganizer" parameterType="com.volunteer.entity.Organizer">
+      update Organizer set 
+        realname = #{Organizer.realname},
+        phone = #{Organizer.phone},
+        tx = #{Organizer.tx},
+        pwd = #{Organizer.pwd},
+        type = #{Organizer.type}
+        where id = #{Organizer.id}
+     </update>
+
+        <update id="updateOrganizerState" parameterType="com.volunteer.entity.Organizer">
+      update Organizer set
+        status = #{Organizer.status}
+        where id = #{Organizer.id}
+     </update>
+
+</mapper>
